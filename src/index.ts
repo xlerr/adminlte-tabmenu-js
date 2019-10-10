@@ -1,7 +1,8 @@
 import $ = require('jquery');
+import Chart from './Chart';
 
-function index(person: string) {
-    return "Hello, " + person;
-}
+const chart = new Chart(),
+    id = Math.random() * 1000,
+    name = `id#${id}`;
 
-$('body').append(index('alskjdlfkaj'));
+$('body').append(chart.run(name));
