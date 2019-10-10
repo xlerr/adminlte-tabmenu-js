@@ -1,10 +1,12 @@
+const path = require("path");
+
 module.exports = {
     entry: {
-        app: './src/index.ts',
+        main: './src/index.ts',
     },
     output: {
-        path: __dirname + '/dist',
-        filename: "bundle.js"
+        path: path.resolve(__dirname, './dist/js'),
+        filename: "[name].js"
     },
     resolve: {
         // Add '.ts' and '.tsx' as a resolvable extension.
