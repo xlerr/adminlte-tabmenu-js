@@ -1,4 +1,4 @@
-DEMO webpack + typescript
+Tab menu for AdminLTE library
 ==============
 
 ...
