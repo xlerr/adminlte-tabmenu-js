@@ -2,6 +2,9 @@
     "name": "xlerr/adminlte-tabmenu-js",
     "type": "library",
     "license": "MIT",
+    "support": {
+        "source": "https://github.com/xlerr/adminlte-tabmenu-js"
+    },
     "authors": [
         {
             "name": "xlerr",
