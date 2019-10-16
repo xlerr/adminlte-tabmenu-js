@@ -1,0 +1,12 @@
+{
+    "name": "xlerr/adminlte-tabmenu-js",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "xlerr",
+            "email": "xlerr@qq.com"
+        }
+    ],
+    "require": {}
+}

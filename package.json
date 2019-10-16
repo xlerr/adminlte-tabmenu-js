@@ -4,12 +4,23 @@
   "description": "",
   "main": "webpack.config.js",
   "dependencies": {
-    "jquery": "^3.4.1"
+    "jquery": "^3.4.1",
+    "js-base64": "^2.5.1",
+    "layer": "^0.1.0",
+    "map-factory": "^3.8.1",
+    "typescript": "^3.6.4"
   },
   "devDependencies": {
     "@types/jquery": "^3.3.31",
+    "@types/js-base64": "^2.3.1",
+    "@types/sortablejs": "^1.7.3",
+    "css-loader": "^3.2.0",
+    "style-loader": "^1.0.0",
     "ts-loader": "^6.2.0",
-    "typescript": "^3.6.4"
+    "typed-css-modules": "^0.6.2",
+    "typed-css-modules-loader": "0.0.17",
+    "webpack": "^4.41.1",
+    "webpack-cli": "^3.3.9"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

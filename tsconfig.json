@@ -2,13 +2,17 @@
     "files": [
         "src/index.ts"
     ],
-    "compileOnSave": true,
+    //    "compileOnSave": true,
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "es6",
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
         "sourceMap": true,
         "target": "es5"
-    }
+    },
+    "lib": [
+        "es2018",
+        "dom"
+    ]
 }

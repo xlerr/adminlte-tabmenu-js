@@ -2,7 +2,8 @@ const path = require("path");
 
 module.exports = {
     entry: {
-        main: './src/index.ts',
+        'tab.menu': './src/index.ts',
+        'sub.iframe': './src/sub.iframe.ts',
     },
     output: {
         path: path.resolve(__dirname, './dist/js'),
@@ -13,7 +14,8 @@ module.exports = {
         extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
     },
     externals: {
-        jquery: 'jQuery'
+        // jquery: 'jQuery',
+        // sortablejs: 'Sortable',
     },
     module: {
         rules: [
