@@ -1,4 +1,22 @@
+interface IframeLoadedParams {
+    self: TabMenu,
+    $iframe: JQuery<HTMLIFrameElement>;
+    $target: JQuery,
+    $icon: JQuery,
+    $title: JQuery,
+    $closeBtn: JQuery,
+    url: string,
+    icon: string,
+}
+
+interface TabMenuOptions {
+    $tabWrap: JQuery;
+    $iframeWrap: JQuery;
+    iframeLoadedCallback?: Function[];
+}
+
 export default class TabMenu {
+    public pushState = true;
     private index: number = 0;
     private iframeList: { [key: string]: JQuery<HTMLIFrameElement> } = {};
     private tabWrap: JQuery;
@@ -7,23 +25,26 @@ export default class TabMenu {
 
     // iframe onload callback list
     private iframeLoadedCallback: Function[] = [
-        function ($iframe: JQuery<HTMLIFrameElement>, $target?: JQuery, $icon?: JQuery, $title?: JQuery, $closeBtn?: JQuery, url?: string, icon?: string) {
-            const title: string = $iframe.contents().find('head > title').text(),
-                href: string = $iframe.get(0).contentWindow.location.href;
-
+        (options: IframeLoadedParams) => {
+            const title = options.$iframe.contents().find('head > title').text();
             document.title = title;
-            window.history.pushState('', '', href);
-
-            $target.attr('title', title);
-            $title.text(title);
-            $icon.attr('class', icon || 'fa fa-circle-o');
+            options.$target.attr('title', title);
+            options.$title.text(title);
+        },
+        (options: IframeLoadedParams) => {
+            options.$icon.attr('class', options.icon || 'fa fa-circle-o');
+        },
+        (options: IframeLoadedParams) => {
+            options.self.pushState && window.history.pushState({
+                id: '#' + options.$iframe.parent().attr('id'),
+            }, '', options.$iframe.get(0).contentWindow.location.href);
+            options.self.pushState = true;
         }
     ];
 
-    constructor(tabWrap: JQuery, iframeWrap: JQuery, options: any) {
-        this.tabWrap = tabWrap;
-        this.iframeWrap = iframeWrap;
-
+    constructor(options: TabMenuOptions) {
+        this.tabWrap = options.$tabWrap;
+        this.iframeWrap = options.$iframeWrap;
         this.iframeLoadedCallback = this.iframeLoadedCallback.concat(options.iframeLoadedCallback || []);
 
         this.registerGlobalFunc();
@@ -69,11 +90,19 @@ export default class TabMenu {
         return this.tabWrap.find('a[data-toggle="tab"][href="#' + id + '"]');
     }
 
-    switchTab(url: string, icon: string = 'fa fa-circle-o') {
+    switchTab(url: string, icon: string = 'fa fa-circle-o', iframeWrapId: string = null) {
         let iframe = this.getIframe(url);
 
         if (!iframe) {
-            iframe = this.makeTab(url, icon);
+            if (iframeWrapId) {
+                iframe = $(iframeWrapId + ' iframe');
+            }
+            if (iframe) {
+                this.pushState = false;
+                iframe.attr('src', url);
+            } else {
+                iframe = this.makeTab(url, icon);
+            }
         }
 
         this.getTarget(iframe.parent().attr('id')).trigger('click');
@@ -93,7 +122,9 @@ export default class TabMenu {
             $closeBtn = $('<i/>', {
                 class: 'fa fa-close'
             }),
-            $targetWrap = $('<li/>'),
+            $targetWrap = $('<li/>', {
+                class: 'active',
+            }),
             $iframe: JQuery<HTMLIFrameElement> = $('<iframe/>', {
                 src: url,
             }),
@@ -139,8 +170,18 @@ export default class TabMenu {
                 url = $iframe.attr('src');
             }
 
-            document.title = title;
-            window.history.pushState('', '', url);
+            const isActive = $target.parent().hasClass('active');
+            if (isActive) {
+                $target.parent().removeClass('active');
+            } else {
+                document.title = title;
+                if (self.pushState) {
+                    window.history.pushState({
+                        id: $target.attr('href'),
+                    }, '', url);
+                }
+                self.pushState = true;
+            }
         });
 
         $target.append($icon).append($title).append($closeBtn).appendTo($targetWrap);
@@ -150,7 +191,7 @@ export default class TabMenu {
 
         $iframe.get(0).onload = function () {
             self.iframeLoadedCallback.forEach(func => {
-                func.call(this, $iframe, $target, $icon, $title, $closeBtn, url, icon);
+                func.call(this, {self, $iframe, $target, $icon, $title, $closeBtn, url, icon});
             });
         };
 
